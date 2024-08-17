@@ -9,9 +9,6 @@
   "scripts": {
     "build": "tsc"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "author": "Islomjon Ergashev",
   "license": "MIT",
   "description": "A lightweight React query library for efficient data fetching, caching, and synchronization.",
