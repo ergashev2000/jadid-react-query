@@ -2,7 +2,7 @@ interface QueryCache {
   [key: string]: { data: any; expiry: number };
 }
 
-export class QueryClient {
+export class QueryClientClass {
   private cache: QueryCache = {};
 
   getQueryData(key: string) {
@@ -26,4 +26,4 @@ export class QueryClient {
   }
 }
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClientClass();

@@ -22,8 +22,7 @@ export const useQuery = (
 ) => {
   const {
     enabled = true,
-    refetchOnWindowFocus = true,
-    refetchOnReconnect = true,
+    refetchOnWindowFocus = false,
     staleTime = 5000,
     cacheTime = 10000,
     refetchInterval = 0,
@@ -67,14 +66,6 @@ export const useQuery = (
       return () => window.removeEventListener("focus", handleFocus);
     }
   }, [refetchOnWindowFocus]);
-
-  useEffect(() => {
-    if (refetchOnReconnect) {
-      const handleOnline = () => fetchData();
-      window.addEventListener("online", handleOnline);
-      return () => window.removeEventListener("online", handleOnline);
-    }
-  }, [refetchOnReconnect]);
 
   useEffect(() => {
     if (refetchInterval > 0) {

@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryClient = exports.QueryClient = void 0;
-var QueryClient = /** @class */ (function () {
-    function QueryClient() {
+exports.queryClient = exports.QueryClientClass = void 0;
+var QueryClientClass = /** @class */ (function () {
+    function QueryClientClass() {
         this.cache = {};
     }
-    QueryClient.prototype.getQueryData = function (key) {
+    QueryClientClass.prototype.getQueryData = function (key) {
         var cached = this.cache[key];
         if (!cached || Date.now() > cached.expiry) {
             return null;
         }
         return cached.data;
     };
-    QueryClient.prototype.setQueryData = function (key, data, ttl) {
+    QueryClientClass.prototype.setQueryData = function (key, data, ttl) {
         var _this = this;
         var expiry = Date.now() + ttl;
         this.cache[key] = { data: data, expiry: expiry };
@@ -20,10 +20,10 @@ var QueryClient = /** @class */ (function () {
             delete _this.cache[key];
         }, ttl);
     };
-    QueryClient.prototype.clear = function () {
+    QueryClientClass.prototype.clear = function () {
         this.cache = {};
     };
-    return QueryClient;
+    return QueryClientClass;
 }());
-exports.QueryClient = QueryClient;
-exports.queryClient = new QueryClient();
+exports.QueryClientClass = QueryClientClass;
+exports.queryClient = new QueryClientClass();

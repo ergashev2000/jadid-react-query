@@ -1,24 +1,25 @@
-import React, { createContext, useContext, ReactNode } from 'react';
-import { QueryClient, queryClient } from './queryClient';
+import React, { createContext, ReactNode, useContext } from 'react';
+import { QueryClientClass } from './queryClient';
 
-const QueryClientContext = createContext<QueryClient | undefined>(undefined);
+const QueryClientContext = createContext<QueryClientClass | undefined>(undefined);
 
-interface QueryClientProviderProps {
-  children: ReactNode;
-}
-
-export const QueryClientProvider: React.FC<QueryClientProviderProps> = ({ children }) => {
-  return (
-    <QueryClientContext.Provider value={queryClient}>
-      {children}
-    </QueryClientContext.Provider>
-  );
-};
-
-export const useQueryClient = () => {
+export const useQueryClient = (): QueryClientClass => {
   const context = useContext(QueryClientContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useQueryClient must be used within a QueryClientProvider');
   }
   return context;
+};
+
+interface QueryClientProviderProps {
+  client: QueryClientClass;
+  children: ReactNode;
+}
+
+export const QueryClientProvider: React.FC<QueryClientProviderProps> = ({ client, children }) => {
+  return (
+    <QueryClientContext.Provider value={client}>
+      {children}
+    </QueryClientContext.Provider>
+  );
 };

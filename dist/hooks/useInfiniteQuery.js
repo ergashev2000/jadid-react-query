@@ -35,45 +35,43 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
         }
-    return t;
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useQuery = void 0;
+exports.useInfiniteQuery = void 0;
 var react_1 = require("react");
-var fetcher_1 = require("../core/fetcher");
-var QueryClientProvider_1 = require("../core/QueryClientProvider");
-var useQuery = function (key, url, options) {
-    if (options === void 0) { options = {}; }
-    var _a = options.enabled, enabled = _a === void 0 ? true : _a, _b = options.refetchOnWindowFocus, refetchOnWindowFocus = _b === void 0 ? false : _b, _c = options.staleTime, staleTime = _c === void 0 ? 5000 : _c, _d = options.cacheTime, cacheTime = _d === void 0 ? 10000 : _d, _e = options.refetchInterval, refetchInterval = _e === void 0 ? 0 : _e, _f = options.backgroundSync, backgroundSync = _f === void 0 ? true : _f, _g = options.retry, retry = _g === void 0 ? 3 : _g, _h = options.retryDelay, retryDelay = _h === void 0 ? 1000 : _h, fetchOptions = __rest(options, ["enabled", "refetchOnWindowFocus", "staleTime", "cacheTime", "refetchInterval", "backgroundSync", "retry", "retryDelay"]);
-    var queryClient = (0, QueryClientProvider_1.useQueryClient)();
-    var _j = (0, react_1.useState)(queryClient.getQueryData(key)), data = _j[0], setData = _j[1];
-    var _k = (0, react_1.useState)(null), error = _k[0], setError = _k[1];
-    var _l = (0, react_1.useState)(!data), loading = _l[0], setLoading = _l[1];
-    var fetchData = (0, react_1.useCallback)(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result, err_1;
+var queryClient_1 = require("../core/queryClient");
+var useInfiniteQuery = function (_a) {
+    var queryKey = _a.queryKey, fetchFunction = _a.fetchFunction, _b = _a.initialPage, initialPage = _b === void 0 ? 1 : _b, _c = _a.pageSize, pageSize = _c === void 0 ? 10 : _c, _d = _a.ttl, ttl = _d === void 0 ? 30000 : _d;
+    var _e = (0, react_1.useState)([]), data = _e[0], setData = _e[1];
+    var _f = (0, react_1.useState)(initialPage), page = _f[0], setPage = _f[1];
+    var _g = (0, react_1.useState)(true), hasNextPage = _g[0], setHasNextPage = _g[1];
+    var _h = (0, react_1.useState)(false), loading = _h[0], setLoading = _h[1];
+    var _j = (0, react_1.useState)(null), error = _j[0], setError = _j[1];
+    var fetchPage = (0, react_1.useCallback)(function (page) { return __awaiter(void 0, void 0, void 0, function () {
+        var response_1, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!enabled)
-                        return [2 /*return*/];
                     setLoading(true);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 5]);
-                    return [4 /*yield*/, (0, fetcher_1.fetcher)(key, url, fetchOptions)];
+                    return [4 /*yield*/, fetchFunction(page)];
                 case 2:
-                    result = _a.sent();
-                    queryClient.setQueryData(key, result, cacheTime);
-                    setData(result);
+                    response_1 = _a.sent();
+                    if (response_1.length < pageSize) {
+                        setHasNextPage(false);
+                    }
+                    setData(function (prevData) { return __spreadArray(__spreadArray([], prevData, true), response_1, true); });
+                    queryClient_1.queryClient.setQueryData(queryKey, response_1, ttl);
                     return [3 /*break*/, 5];
                 case 3:
                     err_1 = _a.sent();
@@ -85,32 +83,20 @@ var useQuery = function (key, url, options) {
                 case 5: return [2 /*return*/];
             }
         });
-    }); }, [enabled, key, url, fetchOptions, cacheTime]);
+    }); }, [fetchFunction, page, queryKey, ttl, pageSize]);
     (0, react_1.useEffect)(function () {
-        if (enabled) {
-            fetchData();
+        fetchPage(initialPage);
+    }, [initialPage]);
+    var loadMore = function () {
+        if (hasNextPage && !loading) {
+            setPage(function (prevPage) { return prevPage + 1; });
         }
-    }, [enabled]);
+    };
     (0, react_1.useEffect)(function () {
-        if (refetchOnWindowFocus) {
-            var handleFocus_1 = function () { return fetchData(); };
-            window.addEventListener("focus", handleFocus_1);
-            return function () { return window.removeEventListener("focus", handleFocus_1); };
+        if (page > initialPage) {
+            fetchPage(page);
         }
-    }, [refetchOnWindowFocus]);
-    (0, react_1.useEffect)(function () {
-        if (refetchInterval > 0) {
-            var interval_1 = setInterval(fetchData, refetchInterval);
-            return function () { return clearInterval(interval_1); };
-        }
-    }, [refetchInterval]);
-    (0, react_1.useEffect)(function () {
-        if (backgroundSync) {
-            var handleOnline_1 = function () { return fetchData(); };
-            window.addEventListener("online", handleOnline_1);
-            return function () { return window.removeEventListener("online", handleOnline_1); };
-        }
-    }, [backgroundSync]);
-    return { data: data, error: error, loading: loading, refetch: fetchData };
+    }, [page]);
+    return { data: data, loading: loading, error: error, loadMore: loadMore, hasNextPage: hasNextPage };
 };
-exports.useQuery = useQuery;
+exports.useInfiniteQuery = useInfiniteQuery;

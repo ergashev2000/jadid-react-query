@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "target": "ES5",
     "lib": ["ES2015", "DOM"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "declaration": true,
+    "declaration": true
   },
   "include": ["src"]
 }

@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react';
-import { QueryClient } from './queryClient';
+import { QueryClientClass } from './queryClient';
+export declare const useQueryClient: () => QueryClientClass;
 interface QueryClientProviderProps {
+    client: QueryClientClass;
     children: ReactNode;
 }
 export declare const QueryClientProvider: React.FC<QueryClientProviderProps>;
-export declare const useQueryClient: () => QueryClient;
 export {};
