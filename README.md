@@ -27,22 +27,20 @@ yarn install jadid-react-query
 
 To use the hooks provided by this library, wrap your application in the `QueryClientProvider` component.
 
-```
+```js
 import Example from "./components/example";
 import { queryClient, QueryClientProvider } from "jadid-react-query";
 
 export default function App() {
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <Example />
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <Example />
+    </QueryClientProvider>
   );
 }
 ```
 
-```
+```js
 import { useQuery } from 'jadid-react-query';
 
 const MyComponent = () => {
@@ -80,7 +78,7 @@ The `useQuery` hook is a powerful tool for fetching, caching, and managing serve
 ### Signature
 
 
-```
+```js
 const { data, error, loading, refetch } = useQuery(
   key: string,
   url: string,
@@ -103,7 +101,7 @@ const { data, error, loading, refetch } = useQuery(
 
 `UseQueryOptions` Interface
 
-```
+```js
 export interface UseQueryOptions {
   enabled?: boolean; // Default: true
   refetchOnWindowFocus?: boolean; // Default: false
@@ -124,7 +122,7 @@ export interface UseQueryOptions {
 ### Basic Usage
 The most basic use case involves fetching data from a given URL and displaying it in a component.
 
-```
+```js
 import React from "react";
 import { useQuery } from "your-package-name";
 
@@ -153,7 +151,7 @@ const MyComponent = () => {
 
 - **Controls whether the query is enabled. If false, the query will not automatically run. You can enable it later or trigger a manual fetch using the refetch function.**
 
-```
+```js
 const { data, refetch } = useQuery("key", "https://api.example.com", {
   enabled: false
 });
@@ -166,7 +164,7 @@ refetch();
 
 - **If set to true, the query will refetch data whenever the window regains focus. This is useful for keeping the data up-to-date when users switch between browser tabs.**
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   refetchOnWindowFocus: true
 });
@@ -177,7 +175,7 @@ useQuery("key", "https://api.example.com", {
 
 - **Defines how long the fetched data is considered fresh (in milliseconds). After this period, the data is considered stale and will be refetched the next time it is accessed.**
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   staleTime: 10000 // 10 seconds
 });
@@ -188,7 +186,7 @@ useQuery("key", "https://api.example.com", {
 
 - **Determines how long the data should be cached in memory (in milliseconds). If a query is not accessed within this time, the cached data will be garbage collected.**
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   cacheTime: 60000 // 1 minute
 });
@@ -199,7 +197,7 @@ useQuery("key", "https://api.example.com", {
 
 - **Defines the interval at which the query should refetch data (in milliseconds). If set to `0`, no automatic refetching will occur.**
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   refetchInterval: 30000 // Refetch every 30 seconds
 });
@@ -210,7 +208,7 @@ useQuery("key", "https://api.example.com", {
 
 - **If `true`, the query will automatically refetch data when the browser comes online after being offline.**
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   backgroundSync: true
 });
@@ -220,7 +218,7 @@ useQuery("key", "https://api.example.com", {
 
 - **The number of retry attempts if the fetch operation fails.**
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   retry: 5 // Retry up to 5 times
 });
@@ -231,7 +229,7 @@ useQuery("key", "https://api.example.com", {
 
 - **The delay between retry attempts (in milliseconds).**
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   retryDelay: 2000 // 2 seconds delay between retries
 });
@@ -242,7 +240,7 @@ useQuery("key", "https://api.example.com", {
 
 You can pass additional fetch options (e.g., headers) through the options parameter.
 
-```
+```js
 useQuery("key", "https://api.example.com", {
   headers: {
     Authorization: "Bearer my-token"
@@ -275,7 +273,7 @@ The `useMutation` hook simplifies handling mutations (e.g., POST, PUT, DELETE) i
 
 ### Usage Example:
 
-```
+```js
 const { data, error, loading, mutate } = useMutation(
   "createUser",
   "/api/users",
@@ -291,7 +289,7 @@ const handleSubmit = (user) => mutate(user);
 
 ### Example: Using useMutation for DELETE Requests
 
-```
+```js
 const { data, error, loading, mutate } = useMutation(
   "deleteUser",
   "/api/users/123",
@@ -309,7 +307,7 @@ const handleDelete = () => {
 
 ### Example: Using useMutation for UPDATE Requests
 
-```
+```js
 const { data, error, loading, mutate } = useMutation(
   "updateUser",
   "/api/users/123",
@@ -340,7 +338,7 @@ The useInfiniteQuery hook allows for paginated data fetching, supporting infinit
 
 ### Example Usage
 
-```
+```js
 import React from "react";
 import { useInfiniteQuery } from "./hooks/useInfiniteQuery";
 
@@ -385,7 +383,7 @@ export default InfiniteScrollComponent;
 
 The `useManualQuery` hook is a custom React hook designed to allow manual fetching of data with built-in support for caching, error handling, and various fetch options. It's similar to useQuery, but it doesn't automatically fetch data on mount—instead, it provides a refetch function that you can call manually.
 
-```
+```js
 import React from 'react';
 import { useManualQuery } from './hooks/useManualQuery';
 

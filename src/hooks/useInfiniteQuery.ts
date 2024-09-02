@@ -27,10 +27,7 @@ export const useInfiniteQuery = ({
       setLoading(true);
       try {
         const response = await fetchFunction(page);
-        if (response.length < pageSize) {
-          setHasNextPage(false);
-        }
-        setData((prevData) => [...prevData, ...response]);
+        setData((prevData) => [...prevData, ...response.data]);
         queryClient.setQueryData(queryKey, response, ttl);
       } catch (err) {
         setError(err);
@@ -38,12 +35,12 @@ export const useInfiniteQuery = ({
         setLoading(false);
       }
     },
-    [fetchFunction, page, queryKey, ttl, pageSize]
+    [pageSize, queryKey, ttl]
   );
 
   useEffect(() => {
     fetchPage(initialPage);
-  }, [initialPage]);
+  }, []);
 
   const loadMore = () => {
     if (hasNextPage && !loading) {
